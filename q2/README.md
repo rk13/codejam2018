@@ -1,6 +1,6 @@
 # Trouble Sort
 
-##Problem
+## Problem
 
 Deep in Code Jam's secret algorithm labs, we devote countless hours to wrestling with one of the most complex problems of our time: efficiently sorting a list of integers into non-decreasing order. We have taken a careful look at the classic bubble sort algorithm, and we are pleased to announce a new variant.
 

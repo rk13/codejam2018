@@ -47,9 +47,9 @@ The robot's program contains either zero or one C characters.
 Test set 2 (Hidden)
 No additional restrictions to the Limits section.
 
-Sample
+## Sample
 
-Input 
+### Input 
 ```
 6
 1 CS
@@ -60,7 +60,7 @@ Input
 3 CSCSS
 ```
 
-Output 
+### Output 
 ```
 Case #1: 1
 Case #2: 0

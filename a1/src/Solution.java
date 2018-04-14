@@ -24,40 +24,39 @@ public class Solution {
         }
     }
 
-    public static boolean process(int[][] w, int r, int c, int h, int v) {
+    private static boolean process(int[][] f, int r, int c, int h, int v) {
         int[] rows = new int[r];
         int[] cols = new int[c];
 
-        int totalChipsCount = chipCount(0, r - 1, 0, c - 1, w);
-        int chipsOnSliceCount = totalChipsCount / ((h + 1) * (v + 1));
+        int chips = chipCount(0, r - 1, 0, c - 1, f);
+        int chipsOnSlice = chips / ((h + 1) * (v + 1));
 
-        if (chipsOnSliceCount * (h + 1) * (v + 1) != totalChipsCount) {
-            return false;
-        }
-
-        if (totalChipsCount == 0) {
+        if (chips == 0) {
             return true;
         }
 
+        if (chipsOnSlice * (h + 1) * (v + 1) != chips) {
+            return false;
+        }
+
         for (int i = 0; i < r; i++) {
-            rows[i] = chipCount(i, i, 0, c - 1, w);
+            rows[i] = chipCount(i, i, 0, c - 1, f);
         }
         for (int i = 0; i < c; i++) {
-            cols[i] = chipCount(0, r - 1, i, i, w);
+            cols[i] = chipCount(0, r - 1, i, i, f);
         }
 
-
         List<Pair> rowIntervals = new ArrayList<>();
-        if (!findIntervals(rows, h, totalChipsCount / (h + 1), rowIntervals)) {
+        if (!findIntervals(rows, h, chips / (h + 1), rowIntervals)) {
             return false;
         }
 
         List<Pair> colIntervals = new ArrayList<>();
-        if (!findIntervals(cols, v, totalChipsCount / (v + 1), colIntervals)) {
+        if (!findIntervals(cols, v, chips / (v + 1), colIntervals)) {
             return false;
         }
 
-        return checkIntervals(rowIntervals, colIntervals, w, chipsOnSliceCount);
+        return checkIntervals(rowIntervals, colIntervals, f, chipsOnSlice);
     }
 
     private static boolean checkIntervals(List<Pair> rowIntervals, List<Pair> colIntervals, int[][] w, int count) {
@@ -71,23 +70,23 @@ public class Solution {
         return true;
     }
 
-    private static boolean findIntervals(int[] a, int razlom, int sum, List<Pair> intervals) {
-        int cum = 0;
-        int cnt = 0;
+    private static boolean findIntervals(int[] a, int slices, int chipsOnSlice, List<Pair> intervals) {
+        int cumChips = 0;
+        int slicesActual = 0;
         int last = -1;
 
         for (int i = 0; i < a.length; i++) {
-            cum += a[i];
-            if (cum == sum) {
-                cnt++;
-                cum = 0;
+            cumChips += a[i];
+            if (cumChips == chipsOnSlice) {
+                slicesActual++;
+                cumChips = 0;
                 intervals.add(new Pair(last + 1, i));
                 last = i;
-            } else if (cum > sum) {
+            } else if (cumChips > chipsOnSlice) {
                 return false;
             }
         }
-        return (cnt == razlom + 1) && (cum == 0);
+        return (slicesActual == slices + 1) && (cumChips == 0);
     }
 
 
@@ -102,9 +101,9 @@ public class Solution {
     }
 
     static class Pair {
-        public final int min, max;
+        final int min, max;
 
-        public Pair(int min, int max) {
+        Pair(int min, int max) {
             this.min = min;
             this.max = max;
         }

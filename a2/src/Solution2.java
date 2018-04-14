@@ -16,6 +16,7 @@ public class Solution2 {
 
     public static void main(String[] args) {
         int t = Integer.parseInt(in.nextLine());
+
         for (int i = 1; i <= t; i++) {
             String[] s = in.nextLine().split(" ");
             R = Integer.parseInt(s[0]);

@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Stream;
 
 public class Solution {
@@ -31,10 +33,6 @@ public class Solution {
         int chips = chipCount(0, r - 1, 0, c - 1, f);
         int chipsOnSlice = chips / ((h + 1) * (v + 1));
 
-        if (chips == 0) {
-            return true;
-        }
-
         if (chipsOnSlice * (h + 1) * (v + 1) != chips) {
             return false;
         }
@@ -46,15 +44,8 @@ public class Solution {
             cols[i] = chipCount(0, r - 1, i, i, f);
         }
 
-        List<Pair> rowIntervals = new ArrayList<>();
-        if (!findIntervals(rows, h, chips / (h + 1), rowIntervals)) {
-            return false;
-        }
-
-        List<Pair> colIntervals = new ArrayList<>();
-        if (!findIntervals(cols, v, chips / (v + 1), colIntervals)) {
-            return false;
-        }
+        List<Pair> rowIntervals = findIntervals(rows, h, chips / (h + 1));
+        List<Pair> colIntervals = findIntervals(cols, v, chips / (v + 1));
 
         return checkIntervals(rowIntervals, colIntervals, f, chipsOnSlice);
     }
@@ -70,25 +61,25 @@ public class Solution {
         return true;
     }
 
-    private static boolean findIntervals(int[] a, int slices, int chipsOnSlice, List<Pair> intervals) {
+    private static List<Pair> findIntervals(int[] a, int intervalCount, int chipsOnSlice) {
         int cumChips = 0;
-        int slicesActual = 0;
         int last = -1;
+        List<Pair> intervals = new ArrayList<>();
 
         for (int i = 0; i < a.length; i++) {
             cumChips += a[i];
-            if (cumChips == chipsOnSlice) {
-                slicesActual++;
+            if (cumChips >= chipsOnSlice) {
                 cumChips = 0;
                 intervals.add(new Pair(last + 1, i));
                 last = i;
-            } else if (cumChips > chipsOnSlice) {
-                return false;
+                if (intervals.size() >= intervalCount) {
+                    break;
+                }
             }
         }
-        return (slicesActual == slices + 1) && (cumChips == 0);
-    }
 
+        return intervals;
+    }
 
     private static int chipCount(int rmin, int rmax, int cmin, int cmax, int[][] w) {
         int sum = 0;

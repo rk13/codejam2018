@@ -78,12 +78,12 @@ Case #6: IMPOSSIBLE
 Note that the last two sample cases would not appear in test set 1.
 
 In Sample Case #1, one possible strategy is to make the horizontal cut between the second and third rows from the top, and make the vertical cut between the fourth and fifth columns from the left. That creates the following pieces, each of which has exactly two chocolate chips:
-
+```
 .@@. .@
 .... .@
 
 @.@. @@
-
+```
 In Sample Case #2, no matter where you make the horizontal cut and the vertical cut, you will create pieces with unequal numbers of chocolate chips, so the case is impossible.
 
 In Sample Case #3, there are no chocolate chips in the waffle. Any cutting strategy creates pieces which have the same number of chocolate chips (zero), so the diners are happy... but maybe not as happy as they would have been if they had gotten chocolate chips!

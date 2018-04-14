@@ -61,10 +61,8 @@ public class Solution {
     }
 
     private static boolean checkIntervals(List<Pair> rowIntervals, List<Pair> colIntervals, int[][] w, int count) {
-        for (int i = 0; i < rowIntervals.size(); i++) {
-            for (int j = 0; j < colIntervals.size(); j++) {
-                Pair rpair = rowIntervals.get(i);
-                Pair cpair = colIntervals.get(j);
+        for (Pair rpair : rowIntervals) {
+            for (Pair cpair : colIntervals) {
                 if (chipCount(rpair.min, rpair.max, cpair.min, cpair.max, w) != count) {
                     return false;
                 }

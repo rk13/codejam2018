@@ -13,13 +13,10 @@ public class Solution {
         for (int i = 1; i <= t; i++) {
             String[] s = in.nextLine().split(" ");
             int[] a = Stream.of(s).mapToInt(Integer::parseInt).toArray();
-            int[][] f = new int[a[0]][a[1]];
 
+            int[][] f = new int[a[0]][a[1]];
             for (int r = 0; r < a[0]; r++) {
-                char[] row = in.nextLine().toCharArray();
-                for (int c = 0; c < row.length; c++) {
-                    f[r][c] = row[c] == '@' ? 1 : 0;
-                }
+                f[r] = in.nextLine().chars().map(x -> (char)x == '@' ? 1 : 0).toArray();
             }
 
             boolean r = process(f, a[0], a[1], a[2], a[3]);

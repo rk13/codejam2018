@@ -8,12 +8,11 @@ import java.util.stream.Stream;
 
 public class Solution {
 
-    static long R, B;
+    static int R, B;
 
     static int C;
 
-    static long[][] F;
-
+    static int[][] F;
 
     public static void main(String[] args) {
 
@@ -22,14 +21,14 @@ public class Solution {
 
         for (int i = 1; i <= t; i++) {
             String[] s = in.nextLine().split(" ");
-            R = Long.parseLong(s[0]);
-            B = Long.parseLong(s[1]);
+            R = Integer.parseInt(s[0]);
+            B = Integer.parseInt(s[1]);
             C = Integer.parseInt(s[2]);
 
-            F = new long[C][];
+            F = new int[C][];
             for (int j = 0; j < C; j++) {
                 String[] s1 = in.nextLine().split(" ");
-                F[j] = Stream.of(s1).mapToLong(Long::parseLong).toArray();
+                F[j] = Stream.of(s1).mapToInt(Integer::parseInt).toArray();
             }
 
             long r = process();

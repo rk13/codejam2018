@@ -15,10 +15,11 @@ public class Solution {
             int[] a = Stream.of(s).mapToInt(Integer::parseInt).toArray();
             int[][] f = new int[a[0]][a[1]];
 
-            for (int j = 0; j < a[0]; j++) {
-                f[j] = in.nextLine().chars()
-                        .map(x -> (char) x == '@' ? 1 : 0)
-                        .toArray();
+            for (int r = 0; r < a[0]; r++) {
+                char[] row = in.nextLine().toCharArray();
+                for (int c = 0; c < row.length; c++) {
+                    f[r][c] = row[c] == '@' ? 1 : 0;
+                }
             }
 
             boolean r = process(f, a[0], a[1], a[2], a[3]);
@@ -26,15 +27,15 @@ public class Solution {
         }
     }
 
-    private static boolean process(int[][] f, int r, int c, int h, int v) {
+    public static boolean process(int[][] f, int r, int c, int h, int v) {
         int[] rows = new int[r];
         int[] cols = new int[c];
 
         int chips = chipCount(0, r - 1, 0, c - 1, f);
         int chipsOnSlice = chips / ((h + 1) * (v + 1));
 
-        if (chipsOnSlice * (h + 1) * (v + 1) != chips) {
-            return false;
+        if (chips == 0) {
+            return true;
         }
 
         for (int i = 0; i < r; i++) {
@@ -78,14 +79,18 @@ public class Solution {
             }
         }
 
+        if (last != a.length - 1) {
+            intervals.add(new Pair(last + 1, a.length - 1));
+        }
+
         return intervals;
     }
 
-    private static int chipCount(int rmin, int rmax, int cmin, int cmax, int[][] w) {
+    private static int chipCount(int rmin, int rmax, int cmin, int cmax, int[][] f) {
         int sum = 0;
         for (int r = rmin; r <= rmax; r++) {
             for (int c = cmin; c <= cmax; c++) {
-                sum += w[r][c];
+                sum += f[r][c];
             }
         }
         return sum;

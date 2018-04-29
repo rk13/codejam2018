@@ -1,17 +1,15 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Solution {
-
     static Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+    static Map<Integer, Set<List<Integer>>> cache = new HashMap<>();
 
     static int N, L;
-
-    static int[] C;
-
+    static List<Integer> C;
 
     public static void main(String[] args) {
         int t = Integer.parseInt(in.nextLine());
@@ -21,90 +19,66 @@ public class Solution {
             L = Integer.parseInt(s[1]);
 
             String[] s1 = in.nextLine().split(" ");
-            C = Stream.of(s1).mapToInt(Integer::parseInt).toArray();
+            C = Stream.of(s1).map(Integer::parseInt).collect(Collectors.toList());
+            C.sort(Collections.reverseOrder());
 
-            long r = process();
+            Set<List<Integer>> p = partitions(N);
+            long r = process(p);
+
             System.out.println("Case #" + i + ": " + r);
         }
     }
 
-
-    static int[] langs;
-    static int[] copy;
-    static long iters;
-
-    public static long process() {
-
-         langs = new int[N];
-         copy = new int[N];
-        int answered = 0;
-        iters = 0;
-
-        for (int i = 0; i < C.length; i++) {
-            langs[i] = C[i];
-            answered += C[i];
+    private static Set<List<Integer>> partitions(Integer n) {
+        if (cache.containsKey(n)) {
+            return cache.get(n);
         }
 
-        int remains = N - answered;
+        Set<List<Integer>> result = new HashSet<>();
+        result.add(Collections.singletonList(n));
 
+        for (int i = 1; i < n; i++) {
+            int a = n - i;
+            Set<List<Integer>> subresults = partitions(i);
+            for (List<Integer> sub : subresults) {
+                if (sub.get(0) <= a) {
+                    List<Integer> tmp = new ArrayList<>();
+                    tmp.add(a);
+                    tmp.addAll(sub);
+                    result.add(tmp);
+                }
+            }
 
-        return next(remains, 0);
+        }
 
+        cache.put(n, result);
+        return result;
     }
 
-    private static long next(int remains, int language) {
-        iters++;
+    private static long process(Set<List<Integer>> p) {
+        return p.stream()
+                .filter(Solution::validPartition)
+                .map(Solution::toPercents)
+                .max(Long::compareTo)
+                .orElseThrow(RuntimeException::new);
+    }
 
-        if (iters > 5000000) {
-            return 100;
+    private static boolean validPartition(List<Integer> partition) {
+        if (partition.size() < C.size()) {
+            return false;
         }
-        if (remains <= 0) {
-            return percents(langs);
-        }
-
-        if (language == N) {
-            return 0;
-        }
-
-        long max = 0;
-
-        for (int i = 0; i <= remains; i++) {
-            langs[language] += i;
-            long tmp = next(remains - i, language + 1);
-            langs[language] -= i;
-            if (tmp > max) {
-                max = tmp;
+        for (int i = 0; i < C.size(); i++) {
+            if (C.get(i) > partition.get(i)) {
+                return false;
             }
         }
-
-        return max;
+        return true;
     }
 
-
-    static Map<String, Long> cached = new HashMap<>();
-
-    public static long percents(int[] votes) {
-
-        System.arraycopy(votes, 0, copy, 0, votes.length);
-        Arrays.sort(copy);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < copy.length; i++) {
-            sb.append(copy[i]).append(',');
-        }
-        String ss = sb.toString();
-        if (cached.containsKey(ss)) {
-            return cached.get(ss);
-        }
-
-        long sum = 0;
-        for (int i = 0; i < votes.length; i++) {
-            long pct = Math.round(((double) votes[i] * 100) / N);
-            sum += pct;
-        }
-
-        cached.put(ss,sum);
-        return sum;
+    private static long toPercents(List<Integer> partition) {
+        return partition.stream()
+                .mapToDouble(Integer::intValue)
+                .mapToLong(x -> Math.round((x / N) * 100))
+                .sum();
     }
-
-
 }

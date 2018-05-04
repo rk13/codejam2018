@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Solution {
@@ -39,45 +38,52 @@ public class Solution {
             }
 
             String r = process();
+
             System.out.println("Case #" + i + ": " + r);
         }
     }
 
 
-    static int longest = 0;
-    static int longestVal = 0;
-
     public static String process() {
 
-        longest = 0;
-        longestVal = 0;
+        long longest = 0;
+        long longestVal = 0;
 
         for (int i = 0; i < S; i++) {
 
-            boolean flag = true;
-            int end = i;
-
-            while(flag && end < S) {
-                flag = (M[end] == M[i]) || (N[end] == N[i]);
-                end++;
+            int m1 = i;
+            while (m1 + 1 < S && M[m1 + 1] == M[i]) {
+                m1++;
             }
 
-            int len = end - i;
-            if (!flag) len--;
+            int k1 = m1;
+            while (k1 + 1 < S && (N[m1 + 1] == N[k1 + 1] || M[i] == M[k1 + 1])) {
+                k1++;
+            }
+            int len1 = k1 - i + 1;
 
-            if (longest < len) {
+
+            int j2 = i;
+            while (j2 + 1 < S && N[j2 + 1] == N[i]) {
+                j2++;
+            }
+
+            int k2 = j2;
+            while (k2 + 1 < S && (M[j2 + 1] == M[k2 + 1] || N[i] == N[k2 + 1])) {
+                k2++;
+            }
+            int len2 = k2 - i + 1;
+
+            int len = Math.max(len1, len2);
+            if (len > longest) {
                 longest = len;
                 longestVal = 1;
-            } else if (longest == len) {
+            } else if (len == longest) {
                 longestVal++;
             }
-
         }
-
         return longest + " " + longestVal;
     }
-
-
 
 
 }
